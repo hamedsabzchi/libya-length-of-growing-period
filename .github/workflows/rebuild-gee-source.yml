@@ -3,7 +3,8 @@ name: Rebuild GEE source
 on:
   push:
     paths:
-      - '.source/libya_lgp_mapping.js.gz.b64'
+      - '.source/libya_lgp_mapping.js.gz.b64.part*'
+      - '.github/workflows/rebuild-gee-source.yml'
 
 permissions:
   contents: write
@@ -18,15 +19,24 @@ jobs:
         shell: bash
         run: |
           mkdir -p gee
-          base64 --decode .source/libya_lgp_mapping.js.gz.b64 | gzip --decompress > gee/libya_lgp_mapping.js
+          cat .source/libya_lgp_mapping.js.gz.b64.part1 \
+              .source/libya_lgp_mapping.js.gz.b64.part2 \
+              .source/libya_lgp_mapping.js.gz.b64.part3 \
+              .source/libya_lgp_mapping.js.gz.b64.part4 \
+            | base64 --decode \
+            | gzip --decompress \
+            > gee/libya_lgp_mapping.js
           python - <<'PY'
           from pathlib import Path
           p = Path('gee/libya_lgp_mapping.js')
           text = p.read_text(encoding='utf-8')
+          assert p.stat().st_size == 68101
           assert 'By: Hamed Sabzchi Dehkharghani' in text
           assert 'NSL Geospatial Unit - Food and Agriculture Organization of the United Nations' not in text
+          assert "ee.FeatureCollection('FAO/GAUL/2015/level0')" in text
           assert 'function annualLGP' in text
           assert 'function buildResult' in text
+          assert 'function addDynamicMapSymbols' in text
           print('Rebuilt', p, 'bytes=', p.stat().st_size)
           PY
       - name: Commit reconstructed source
