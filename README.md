@@ -1,5 +1,7 @@
 # Libya Length of Growing Period (LGP) Mapping
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22181790.svg)](https://doi.org/10.5281/zenodo.22181790)
+
 A reproducible geospatial workflow for mapping Length of Growing Period (LGP) in Libya using Google Earth Engine and Python. The workflow combines rainfall, evaporative demand, temperature, and soil-water storage in a sequential monthly water balance.
 
 ## Project status
@@ -95,6 +97,10 @@ The SoilGrids option is a spatial water-storage scenario derived from static soi
 - Turek et al. (2023), global soil-water retention mapping, *International Soil and Water Conservation Research*. DOI: 10.1016/j.iswcr.2022.08.001
 - Food and Agriculture Organization of the United Nations (1996), *Agro-ecological zoning: Guidelines*, FAO Soils Bulletin 73.
 - Gintzburger, G. and Saidi, S. (2025), *Agro-ecological Zoning of Libya: The Case of Barley and the Olive Tree*. DOI: 10.1079/9781800627154.0017
+
+## Citation
+
+Zenodo DOI: **10.5281/zenodo.22181790**
 
 ## Author
 
