@@ -12,6 +12,17 @@ from typing import Dict, List, Optional
 
 import ee
 
+# Compatibility for dynamic importlib loaders that execute this module before
+# registering it in sys.modules (notably some Colab/Python 3.13 patterns).
+import sys
+import types
+
+_MODULE_PROXY = None
+if __name__ not in sys.modules:
+    _MODULE_PROXY = types.ModuleType(__name__)
+    _MODULE_PROXY.__dict__.update(globals())
+    sys.modules[__name__] = _MODULE_PROXY
+
 
 DEFAULT_START_YEAR = 2020
 DEFAULT_END_YEAR = 2024
@@ -429,3 +440,8 @@ def configuration_summary(config: LGPConfig) -> Dict[str, object]:
         "final_statistic": "Pixel-wise median annual LGP",
         "displayed_output": "LGP Classification",
     }
+
+# Keep the compatibility proxy complete for any later normal import.
+if _MODULE_PROXY is not None:
+    _MODULE_PROXY.__dict__.update(globals())
+
