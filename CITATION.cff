@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: "Sabzchi Dehkharghani"
     given-names: "Hamed"
-version: 1.0.0
+version: 1.0.1
 repository-code: "https://github.com/hamedsabzchi/libya-length-of-growing-period"
 url: "https://github.com/hamedsabzchi/libya-length-of-growing-period"
 abstract: "A reproducible Google Earth Engine and Python workflow for Length of Growing Period mapping and climate-soil water balance analysis in Libya."
