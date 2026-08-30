@@ -1,0 +1,46 @@
+name: Publish v1.0.1 for Zenodo
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-v101.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare clean v1.0.1 archival release
+        id: prep
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('CITATION.cff')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace('version: 1.0.0', 'version: 1.0.1', 1)
+          p.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/publish-v101.yml
+          git add -A
+          git commit -m 'Prepare v1.0.1 archival release for Zenodo'
+          git push
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Create GitHub Release v1.0.1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLEAN_SHA: ${{ steps.prep.outputs.sha }}
+        shell: bash
+        run: |
+          gh release create v1.0.1 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$CLEAN_SHA" \
+            --title "v1.0.1" \
+            --notes "Archival release created after enabling Zenodo integration. Functionality is unchanged from v1.0.0; this release updates citation metadata and enables DOI preservation through Zenodo."
